@@ -1,0 +1,106 @@
+{
+	"info": {
+		"_postman_id": "9b6c7d8e-f9a1-4b2c-ad3e-4f5a6b7c8d9e",
+		"name": "TechLab API",
+		"description": "Massa de dados dinâmica conforme o Guia Prático.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "POST Cadastrar em Lote (Loop Interno)",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// 1. Verifica se a lista de equipamentos já existe na memória. Se não, cria a lista.",
+							"if (!pm.variables.get(\"lista_equipamentos\")) {",
+							"    let massa_dados = [",
+							"        { nome: \"Monitor Samsung 24\", patrimonio: \"EEEP-MON-001\", categoria: \"Computadores\" },",
+							"        { nome: \"Mouse Logitech\", patrimonio: \"EEEP-AC-002\", categoria: \"Acessórios\" },",
+							"        { nome: \"Kit Sensor Ultrassônico\", patrimonio: \"EEEP-ROB-003\", categoria: \"Robótica\" },",
+							"        { nome: \"Teclado Mecânico\", patrimonio: \"EEEP-AC-004\", categoria: \"Acessórios\" },",
+							"        { nome: \"Raspberry Pi 4\", patrimonio: \"EEEP-ROB-005\", categoria: \"Robótica\" }",
+							"    ];",
+							"    // Salva a lista como uma variável do Postman (transformando em texto JSON)",
+							"    pm.variables.set(\"lista_equipamentos\", JSON.stringify(massa_dados));",
+							"}",
+							"",
+							"// 2. Resgata a lista atual da memória",
+							"let equipamentos = JSON.parse(pm.variables.get(\"lista_equipamentos\"));",
+							"",
+							"// 3. Pega o PRIMEIRO item da lista e o remove do array (usando shift)",
+							"let equipamentoAtual = equipamentos.shift();",
+							"",
+							"// 4. Salva a lista atualizada (agora com um item a menos) de volta na memória",
+							"pm.variables.set(\"lista_equipamentos\", JSON.stringify(equipamentos));",
+							"",
+							"// 5. Define as variáveis que serão injetadas lá na aba \"Body\" que configuramos",
+							"pm.variables.set(\"nome\", equipamentoAtual.nome);",
+							"pm.variables.set(\"patrimonio\", equipamentoAtual.patrimonio);",
+							"pm.variables.set(\"categoria\", equipamentoAtual.categoria);",
+							"",
+							"console.log(\"Preparando para cadastrar: \" + equipamentoAtual.nome);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// 1. Verifica se o equipamento foi criado com sucesso",
+							"pm.test(\"Status code deve ser 201 Created\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"// 2. Resgata a lista da memória para ver quantos itens sobraram",
+							"let equipamentos = JSON.parse(pm.variables.get(\"lista_equipamentos\"));",
+							"",
+							"// 3. A Lógica do Loop (postman.setNextRequest)",
+							"if (equipamentos.length > 0) {",
+							"    // Se ainda tem itens, manda o Postman chamar ESTA MESMA requisição novamente",
+							"    postman.setNextRequest(pm.info.requestName);",
+							"} else {",
+							"    // Se a lista esvaziou, encerra o loop e limpa as variáveis para o próximo teste",
+							"    postman.setNextRequest(null);",
+							"    pm.variables.unset(\"lista_equipamentos\");",
+							"    pm.variables.unset(\"nome\");",
+							"    pm.variables.unset(\"patrimonio\");",
+							"    pm.variables.unset(\"categoria\");",
+							"    console.log(\"✅ Cadastro em lote finalizado com sucesso!\");",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"nome\": \"{{nome}}\",\n    \"patrimonio\": \"{{patrimonio}}\",\n    \"categoria\": \"{{categoria}}\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/equipamentos",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"equipamentos"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
