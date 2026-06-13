@@ -13,4 +13,4 @@ pm.test("A resposta deve ser uma lista (Array) preenchida", function () {
     var jsonData = pm.response.json();
     pm.expect(jsonData).to.be.an("array");
     pm.expect(jsonData.length).to.be.greaterThan(0);
-});]
+});
