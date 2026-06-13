@@ -1,0 +1,16 @@
+// 1. Verifica se o Status HTTP é 200 (Sucesso)
+pm.test("Status code é 200 OK", function () {
+    pm.response.to.have.status(200);
+});
+
+// 2. Verifica se a resposta é rápida (performance)
+pm.test("Tempo de resposta menor que 500ms", function () {
+    pm.expect(pm.response.responseTime).to.be.below(500);
+});
+
+// 3. Verifica o formato e integridade dos dados retornados
+pm.test("A resposta deve ser uma lista (Array) preenchida", function () {
+    var jsonData = pm.response.json();
+    pm.expect(jsonData).to.be.an("array");
+    pm.expect(jsonData.length).to.be.greaterThan(0);
+});]
