@@ -1,0 +1,371 @@
+{
+  "info": {
+    "_postman_id": "57d6e8e0-c182-4b23-aa0f-5890d30ae0e7",
+    "name": "TECHLAB",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "55690286",
+    "_collection_link": "https://go.postman.co/collection/55690286-57d6e8e0-c182-4b23-aa0f-5890d30ae0e7?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "REGRAS DE NEGÓCIO",
+      "item": [
+        {
+          "name": "POST Emprestar Equipamento",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 400\", function () {\r",
+                  "    // O sistema deve recusar a requisição por causa do nome curto\r",
+                  "    pm.response.to.have.status(400);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Valida erro de nome curto\", function () {\r",
+                  "    let responseText = pm.response.text();\r",
+                  "    \r",
+                  "    // Transforma em texto e verifica se a resposta acusa o erro esperado\r",
+                  "    // (Pode ser uma mensagem contendo 'responsavel', 'caracteres', 'tamanho' ou 'inválido')\r",
+                  "    pm.expect(responseText.toLowerCase()).to.match(/responsavel|erro|caracter|tamanho|invalido/);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"responsavel_atual\": \"Zé\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/equipamentos/2/emprestar",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "equipamentos",
+                "2",
+                "emprestar"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Buscar Equipamento Inexistente",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "PUT Editar Equipamento Inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 404\", function () {\r",
+                  "    pm.response.to.have.status(404);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Mensagem de erro retornada\", function () {\r",
+                  "    let jsonData = pm.response.json();\r",
+                  "\r",
+                  "    pm.expect(jsonData).to.have.property(\"erro\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"responsavel_atual\": \"Marcos Costa\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/equipamentos/99",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "equipamentos",
+                "99"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE Excluir um Equipamento Inexistente",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/equipamentos/99",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "equipamentos",
+                "99"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Emprestar Equipamento Inexistente",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"responsavel_atual\": \"Pedro Souza\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/equipamentos/99/emprestar",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "equipamentos",
+                "99",
+                "emprestar"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Devolver Equipamento que não está Emprestado",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "CAMINHOS FELIZES",
+      "item": [
+        {
+          "name": "GET Listar Equipamentos",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "GET Listar equipamentos pelo Id",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "POST Cadastrar Equipamento",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Equipamento cadastrado com sucesso (Status 201)\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nome\": \"Pen Drive 32Gb\",\r\n  \"patrimonio\": \"EEEP-PD-020\",\r\n  \"categoria\": \"Acessórios\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/equipamentos",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "equipamentos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT Editar Equipamento",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nome\": \"Pen Drive 32GB\",\r\n  \"categoria\": \"Computadores\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/equipamentos/4",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "equipamentos",
+                "4"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE Excluir Equipamento",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/equipamentos/4",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "equipamentos",
+                "4"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Registrar Empréstimo",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"responsavel_atual\": \"Mateus Morais\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/equipamentos/1/emprestar",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "equipamentos",
+                "1",
+                "emprestar"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Registrar Devolução",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Devolução registrada com sucesso\", function () {\r",
+                  "    let jsonData = pm.response.json();\r",
+                  "\r",
+                  "    pm.expect(jsonData).to.have.property(\"id\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/equipamentos/2/devolver",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "equipamentos",
+                "2",
+                "devolver"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
